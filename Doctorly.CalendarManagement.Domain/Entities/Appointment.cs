@@ -1,16 +1,29 @@
-﻿namespace Doctorly.CalendarManagement.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using static Doctorly.CalendarManagement.Domain.Enums.AppointmentEnums;
+
+namespace Doctorly.CalendarManagement.Domain.Entities
 {
 
-    public class Appointment(string? title, string? description, DateTime startTime, DateTime endTime, bool isAttending, DateTime dateCreated, DateTime dateAmended)
+    public class Appointment()
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
-        public string? Title { get; private set; } = title;
-        public string? Description { get; private set; } = description;
-        public DateTime StartTime { get; private set; } = startTime;
-        public DateTime EndTime { get; private set; } = endTime;
-        public bool IsAttending { get; private set; } = isAttending;
-        public DateTime DateCreated { get; private set; } = dateCreated;
-        public DateTime AmendDate { get; private set; } = dateAmended;
-        public List<Attendee> Attendees { get; private set; } = [];
+
+        public Guid Id { get; set; }
+        [Required, MaxLength(200)]
+        public string? Title { get; set; }
+        [MaxLength(1000)]
+        public string? Description { get; set; }
+        [Required]
+        public DateTime StartTime { get; set; }
+        [Required]
+        public DateTime EndTime { get; set; }
+        public bool IsAttending { get; set; }
+        public DateTime DateCreated { get; }
+        public DateTime DateAmended { get; }
+        [Required]
+        public AppointmentStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public ICollection<AppointmentAttendee> AppointmentAttendees { get; set; } = new List<AppointmentAttendee>();
+
     }
 }

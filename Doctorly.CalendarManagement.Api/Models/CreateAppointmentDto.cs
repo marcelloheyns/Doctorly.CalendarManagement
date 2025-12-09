@@ -3,13 +3,23 @@
 namespace Doctorly.CalendarManagement.Api.Models
 {
 
-    public class CreateEventRequest
+    public class CreateAppointmentDto
     {
-        [Required]
-        public string? Title { get; set; }
+
+        [Required, MaxLength(200)]
+        public string Title { get; set; } = default!;
+
+        [MaxLength(1000)]
         public string? Description { get; set; }
+
+        [Required]
         public DateTime StartTime { get; set; }
+
+        [Required]
         public DateTime EndTime { get; set; }
+
+        public AttendeeDto? Attendees { get; set; }
+
     }
 
 }

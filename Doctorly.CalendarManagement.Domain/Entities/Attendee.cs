@@ -1,11 +1,16 @@
-﻿namespace Doctorly.CalendarManagement.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Doctorly.CalendarManagement.Domain.Entities
 {
-    public class Attendee(string name, string surname, string email)
+    public class Attendee()
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
-        public string? Name { get; private set; } = name;
-        public string? Surname { get; private set; } = surname;
-        public string? Email { get; private set; } = email;
-        public DateTime? DateCreated { get; private set; } = DateTime.UtcNow;
+        public Guid Id { get; set; }
+        [Required, MaxLength(100)]
+        public string? Name { get; set; }
+        [Required, MaxLength(255), EmailAddress]
+        public string? Email { get; set; }
+        public bool IsAttending { get; set; }
+        public ICollection<AppointmentAttendee> AppointmentAttendees { get; set; } = new List<AppointmentAttendee>();
+
     }
 }

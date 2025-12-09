@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Doctorly.CalendarManagement.Api/Doctorly.CalendarManagement.Api.csproj" />
+  <Project Path="Doctorly.CalendarManagement.Application/Doctorly.CalendarManagement.Application.csproj" />
+  <Project Path="Doctorly.CalendarManagement.Domain/Doctorly.CalendarManagement.Domain.csproj" />
+  <Project Path="Doctorly.CalendarManagement.Infrastructure/Doctorly.CalendarManagement.Infrastructure.csproj" />
+</Solution>

@@ -16,20 +16,17 @@ namespace Doctorly.CalendarManagement.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Composite key for AppointmentAttendee
             modelBuilder.Entity<AppointmentAttendee>()
                 .HasKey(aa => new { aa.AppointmentId, aa.AttendeeId });
 
-            // Relationship: Appointment → AppointmentAttendees
             modelBuilder.Entity<AppointmentAttendee>()
                 .HasOne(aa => aa.Appointment)
-                .WithMany(a => a.AppointmentAttendees) // ✅ Must match collection property in Appointment
+                .WithMany(a => a.AppointmentAttendees) 
                 .HasForeignKey(aa => aa.AppointmentId);
 
-            // Relationship: Attendee → AppointmentAttendees
             modelBuilder.Entity<AppointmentAttendee>()
                 .HasOne(aa => aa.Attendee)
-                .WithMany(a => a.AppointmentAttendees) // ✅ Must match collection property in Attendee
+                .WithMany(a => a.AppointmentAttendees)
                 .HasForeignKey(aa => aa.AttendeeId);
         }
 

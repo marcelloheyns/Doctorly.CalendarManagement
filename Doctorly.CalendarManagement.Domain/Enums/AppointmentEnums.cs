@@ -6,7 +6,8 @@
         public enum AppointmentStatus
         {
             Scheduled,
-            Cancelled
+            Cancelled,
+            Rejected
         }
 
         public enum RSVPStatus

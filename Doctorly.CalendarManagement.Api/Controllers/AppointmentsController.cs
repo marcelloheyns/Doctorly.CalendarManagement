@@ -2,6 +2,7 @@
 using Doctorly.CalendarManagement.Application.Service;
 using Doctorly.CalendarManagement.Domain.Entities;
 using Doctorly.CalendarManagement.Domain.Enums;
+using Doctorly.CalendarManagement.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doctorly.CalendarManagement.Api.Controllers
@@ -13,10 +14,12 @@ namespace Doctorly.CalendarManagement.Api.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly AppointmentService _appointmentService;
+        private readonly INotificationService _notificationService;
 
-        public AppointmentsController(AppointmentService appointmentService)
+        public AppointmentsController(AppointmentService appointmentService, INotificationService notificationService)
         {
             _appointmentService = appointmentService;
+            _notificationService = notificationService;
         }
 
         /// <summary>
@@ -25,10 +28,12 @@ namespace Doctorly.CalendarManagement.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Appointment))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Appointment>> Create([FromBody] CreateAppointmentDto request)
         {
             var guid = Guid.NewGuid();
-            var appointment = new Appointment() {
+            var appointment = new Appointment()
+            {
                 Id = guid,
                 Title = request.Title,
                 Description = request.Description,
@@ -54,7 +59,7 @@ namespace Doctorly.CalendarManagement.Api.Controllers
 
             };
             var ev = await _appointmentService.CreateEventAsync(appointment);
-            return CreatedAtAction(nameof(GetById), new { id = ev.Id }, ev);
+            return Ok(ev);
         }
 
         /// <summary>
@@ -74,7 +79,7 @@ namespace Doctorly.CalendarManagement.Api.Controllers
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Appointment))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Appointment>> GetById(Guid id)
         {
             var ev = await _appointmentService.GetEventAsync(id);
@@ -97,7 +102,7 @@ namespace Doctorly.CalendarManagement.Api.Controllers
                 return NotFound();
 
             var guid = Guid.NewGuid();
-            var appointment = new Appointment()
+            Appointment appointment = new()
             {
                 Id = guid,
                 Title = request.Title,

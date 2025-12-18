@@ -12,14 +12,14 @@ namespace Doctorly.CalendarManagement.ApplicationTests.Services
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IGenericRepository<Appointment>> _appointmentsRepoMock;
-        private readonly Mock<ILogger> _logger;
         private readonly AppointmentService _service;
+        private readonly Mock<ILogger<AppointmentService>> _logger;
 
         public AppointmentServiceTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _appointmentsRepoMock = new Mock<IGenericRepository<Appointment>>();
-            _logger = new Mock<ILogger>();
+            _logger = new Mock<ILogger<AppointmentService>>();
             _unitOfWorkMock.SetupGet(u => u.Appointments).Returns(_appointmentsRepoMock.Object);
             _service = new AppointmentService(_unitOfWorkMock.Object, _logger.Object);
         }

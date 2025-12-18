@@ -2,6 +2,7 @@
 using Doctorly.CalendarManagement.Application.Service;
 using Doctorly.CalendarManagement.Domain.Entities;
 using Doctorly.CalendarManagement.Domain.Enums;
+using Doctorly.CalendarManagement.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doctorly.CalendarManagement.Api.Controllers
@@ -13,20 +14,26 @@ namespace Doctorly.CalendarManagement.Api.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly AppointmentService _appointmentService;
+        private readonly INotificationService _notificationService;
 
-        public AppointmentsController(AppointmentService appointmentService)
+        public AppointmentsController(AppointmentService appointmentService, INotificationService notificationService)
         {
             _appointmentService = appointmentService;
+            _notificationService = notificationService;
         }
 
         /// <summary>
         /// Create a new event.
         /// </summary>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Appointment))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Appointment>> Create([FromBody] CreateAppointmentDto request)
         {
             var guid = Guid.NewGuid();
-            var appointment = new Appointment() {
+            var appointment = new Appointment()
+            {
                 Id = guid,
                 Title = request.Title,
                 Description = request.Description,
@@ -52,13 +59,15 @@ namespace Doctorly.CalendarManagement.Api.Controllers
 
             };
             var ev = await _appointmentService.CreateEventAsync(appointment);
-            return CreatedAtAction(nameof(GetById), new { id = ev.Id }, ev);
+            return Ok(ev);
         }
 
         /// <summary>
         /// Get all events.
         /// </summary>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Appointment>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAll()
         {
             var events = await _appointmentService.GetAllEventsAsync();
@@ -69,6 +78,8 @@ namespace Doctorly.CalendarManagement.Api.Controllers
         /// Get an event by ID.
         /// </summary>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Appointment))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Appointment>> GetById(Guid id)
         {
             var ev = await _appointmentService.GetEventAsync(id);
@@ -81,6 +92,9 @@ namespace Doctorly.CalendarManagement.Api.Controllers
         /// Update an event.
         /// </summary>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAppointmentDto request)
         {
             var ev = await _appointmentService.GetEventAsync(id);
@@ -88,7 +102,7 @@ namespace Doctorly.CalendarManagement.Api.Controllers
                 return NotFound();
 
             var guid = Guid.NewGuid();
-            var appointment = new Appointment()
+            Appointment appointment = new()
             {
                 Id = guid,
                 Title = request.Title,
@@ -120,6 +134,9 @@ namespace Doctorly.CalendarManagement.Api.Controllers
         /// Delete an event.
         /// </summary>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var ev = await _appointmentService.GetEventAsync(id);

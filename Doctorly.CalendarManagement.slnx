@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Tests/">
+    <Project Path="Doctorly. CalendarManagement.ApplicationTests/Doctorly. CalendarManagement.ApplicationTests.csproj" Id="ad10b5b0-bed5-440e-8793-ba5457e2c48f" />
+  </Folder>
   <Project Path="Doctorly.CalendarManagement.Api/Doctorly.CalendarManagement.Api.csproj" />
   <Project Path="Doctorly.CalendarManagement.Application/Doctorly.CalendarManagement.Application.csproj" />
   <Project Path="Doctorly.CalendarManagement.Domain/Doctorly.CalendarManagement.Domain.csproj" />
